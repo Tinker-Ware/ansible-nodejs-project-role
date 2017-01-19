@@ -21,6 +21,7 @@
     accept_hostkey=yes
     recursive=yes
     version={{ github_repo_version }}
+    force=no
   sudo: yes
   sudo_user: "{{ server_user }}"
 
