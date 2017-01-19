@@ -22,6 +22,7 @@
     recursive=yes
     version={{ github_repo_version }}
     force=no
+    update=no
   sudo: yes
   sudo_user: "{{ server_user }}"
 
