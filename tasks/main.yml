@@ -1,43 +1,7 @@
 ---
-- name: Folder in opt for repos
-  sudo: true
-  file:
-    path={{ repo_path }}
-    owner={{ server_user }}
-    group={{ server_group }}
-    mode=0755
-    state=directory
-
-- name: install zip
-  apt:
-    name=unzip
-    state=present
+- include: yarn.yml
   sudo: yes
+  tags: yarn
 
-- name: Clone server for react
-  git:
-    repo={{ github_repo }}
-    dest={{ repo_path }}/{{ github_repo | basename }}
-    accept_hostkey=yes
-    recursive=yes
-    version={{ github_repo_version }}
-    force=no
-    update=no
-  sudo: yes
-  sudo_user: "{{ server_user }}"
-
-- name: Install node dependencies
-  shell: "npm install --max_old_space_size=512"
-  args:
-    chdir: "{{ repo_path }}/{{ github_repo | basename }}"
-  sudo: yes
-  sudo_user: "{{ server_user }}"
-
-- name: Start daemon production
-  shell: "nohup {{ react_production_command }} 0<&- &> /tmp/reactpage.log &"
-  args:
-    chdir: "{{ repo_path }}/{{ github_repo | basename }}"
-    executable: /bin/bash
-  sudo: yes
-  sudo_user: "{{ server_user }}"
-  when: react_production
+- include: project.yml
+  tags: project
