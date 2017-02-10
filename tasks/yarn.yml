@@ -1,0 +1,15 @@
+---
+- apt_key:
+    url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
+    state: present
+    
+- apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+    update_cache: yes
+
+- name: Install yarn package
+  apt:
+    name: yarn
+    state: present
+    update_cache: no
