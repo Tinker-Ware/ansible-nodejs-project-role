@@ -21,8 +21,8 @@
     accept_hostkey=yes
     recursive=yes
     version={{ github_repo_version }}
-    force=yes
-    update=yes
+    force={{ react_production }}
+    update={{ react_production }}
   sudo: yes
   sudo_user: "{{ server_user }}"
   tags:
