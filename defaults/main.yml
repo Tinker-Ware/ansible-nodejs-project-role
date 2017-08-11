@@ -2,3 +2,4 @@
 react_production: no
 react_production_command: "npm run build"
 github_repo_version: master
+github_repo: "https://github.com/Tinker-Ware/homepage.git"
