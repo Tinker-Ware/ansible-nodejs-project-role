@@ -1,5 +1,5 @@
 ---
-react_production: no
-react_production_command: "npm run build"
+react_production: yes
+react_production_command: "npm start --production"
 github_repo_version: master
 github_repo: "https://github.com/Tinker-Ware/homepage.git"
