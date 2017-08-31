@@ -38,14 +38,14 @@
   tags:
     - update_react_repo
 
-- name: Kill existing react services
-  shell: "ps aux | grep node | grep -v grep | awk '{printf(\"%s \"), $2}' | xargs kill -9"
-  sudo: yes
-  sudo_user: "{{ server_user }}"
-  tags:
-    - kill_react
-    - update_react_repo
-    - update_services
+# - name: Kill existing react services
+#   shell: "ps aux | grep node | grep -v grep | awk '{printf(\"%s \"), $2}' | xargs kill -9"
+#   sudo: yes
+#   sudo_user: "{{ server_user }}"
+#   tags:
+#     - kill_react
+#     - update_react_repo
+#     - update_services
 
 - name: Start daemon production
   shell: "nohup {{ react_production_command }} 0<&- &> /tmp/reactpage.log &"
