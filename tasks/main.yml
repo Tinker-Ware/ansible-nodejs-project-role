@@ -1,7 +1,7 @@
 ---
-- include: yarn.yml
-  sudo: yes
+- include_tasks: yarn.yml
+  become: yes
   tags: yarn
 
-- include: project.yml
+- include_tasks: project.yml
   tags: project

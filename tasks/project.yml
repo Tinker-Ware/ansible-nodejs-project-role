@@ -1,6 +1,6 @@
 ---
 - name: Folder in opt for repos
-  sudo: true
+  become: true
   file:
     path={{ repo_path }}
     owner={{ server_user }}
@@ -12,8 +12,14 @@
   apt:
     name=unzip
     state=present
-  sudo: yes
+  become: yes
 
+- name: Remove libgnutls collisions
+  apt:
+    name=libgnutls-deb0-28
+    state=absent
+  become: yes
+  
 - name: Clone server for react
   git:
     repo={{ github_repo }}
@@ -23,8 +29,8 @@
     version={{ github_repo_version }}
     force={{ react_production }}
     update={{ react_production }}
-  sudo: yes
-  sudo_user: "{{ server_user }}"
+  become: yes
+  become_user: "{{ server_user }}"
   tags:
     - update_react_repo
 
@@ -32,28 +38,28 @@
   command: "yarn --production"
   args:
     chdir: "{{ repo_path }}/{{ github_repo | basename }}"
-  sudo: yes
-  sudo_user: "{{ server_user }}"
+  become: yes
+  become_user: "{{ server_user }}"
   when: react_production
   tags:
     - update_react_repo
 
 # - name: Kill existing react services
 #   shell: "ps aux | grep node | grep -v grep | awk '{printf(\"%s \"), $2}' | xargs kill -9"
-#   sudo: yes
-#   sudo_user: "{{ server_user }}"
+#   become: yes
+#   become_user: "{{ server_user }}"
 #   tags:
 #     - kill_react
 #     - update_react_repo
-#     - update_services
+#    - update_services
 
 - name: Start daemon production
   shell: "nohup {{ react_production_command }} 0<&- &> /tmp/reactpage.log &"
   args:
     chdir: "{{ repo_path }}/{{ github_repo | basename }}"
     executable: /bin/bash
-  sudo: yes
-  sudo_user: "{{ server_user }}"
+  become: yes
+  become_user: "{{ server_user }}"
   when: react_production
   tags:
     - update_react_repo
