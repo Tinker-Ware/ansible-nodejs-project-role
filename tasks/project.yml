@@ -19,7 +19,7 @@
     name=libgnutls-deb0-28
     state=absent
   become: yes
-  
+
 - name: Clone server for react
   git:
     repo={{ github_repo }}
@@ -34,13 +34,20 @@
   tags:
     - update_react_repo
 
+- name: Install g++ package
+  apt:
+    name: "g++"
+    update_cache: yes
+  become: yes
+  tags:
+    - install_compiler
+
 - name: Install node dependencies
-  command: "yarn --production"
+  command: "yarn install"
   args:
     chdir: "{{ repo_path }}/{{ github_repo | basename }}"
   become: yes
   become_user: "{{ server_user }}"
-  when: react_production
   tags:
     - update_react_repo
 
@@ -53,6 +60,10 @@
 #     - update_react_repo
 #    - update_services
 
+- name: Kill eyes process if it is running
+  shell: "if lsof -t -i:3002; then kill -9 `lsof -t -i:3002`; fi"
+  become: yes
+
 - name: Start daemon production
   shell: "nohup {{ react_production_command }} 0<&- &> /tmp/reactpage.log &"
   args:
@@ -61,6 +72,18 @@
   become: yes
   become_user: "{{ server_user }}"
   when: react_production
+  tags:
+    - update_react_repo
+    - update_services
+
+- name: Start daemon development
+  shell: "nohup {{ react_production_command }} 0<&- &> /tmp/reactpage.log &"
+  args:
+    chdir: "{{ repo_path }}/{{ github_repo | basename }}"
+    executable: /bin/bash
+  become: yes
+  become_user: "{{ server_user }}"
+  when: not react_production
   tags:
     - update_react_repo
     - update_services
