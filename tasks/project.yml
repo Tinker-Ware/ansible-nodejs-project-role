@@ -48,7 +48,6 @@
     chdir: "{{ repo_path }}/{{ github_repo | basename }}"
   become: yes
   become_user: "{{ server_user }}"
-  # when: react_production
   tags:
     - update_react_repo
 
